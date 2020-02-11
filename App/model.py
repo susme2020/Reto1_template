@@ -121,12 +121,12 @@ def addDirector (catalog, row, pos_movie):
     d = newDirector(movie, row)
     lt.addLast(catalog['directors'], d)
 
-def newGenre (movie, row):
+def newGenre (movie):
     """
     Crea una nueva estructura para almacenar los géneros de películas
     """
     genre = {'name':'', 'movies_id':'', 'movie_titles':'', 'movie_count': '', 'movie_average': ''}
-    genre ['name'] = row['director_name']
+    genre ['name'] = movie['genres']
     genre ['movies_id'] = lt.newList('ARRAY_LIST')
     lt.addLast(genre ['movies_id'], movie['id'])
     genre ['movie_titles'] = lt.newList('ARRAY_LIST')
@@ -135,23 +135,21 @@ def newGenre (movie, row):
     genre ['movie_average'] = movie['vote_average']
     return genre
 
-def updateGenre(catalog, pos_actor, pos_movie, director):
+def updateGenre(catalog, movie, pos_genre):
     """
     Actualiza la lista de actores
     """
-    movie = catalog['movies'][pos_movie]
-    genre = catalog['actors'][pos_actor]
+    genre = catalog['genre'][pos_genre]
     lt.addLast(genre['movies_id'], movie['id'])
     lt.addLast(genre['movie_titles'], movie['title'])
     genre['movie_count'] += 1
     genre['movie_average'] += movie['vote_average']
 
-def addGenre(catalog, row, pos_movie):
+def addGenre(catalog, movie):
     """
     Adiciona un actor a la lista de actores
     """
-    movie = catalog['movies'][pos_movie]
-    g = newGenre(movie, row)
+    g = newGenre(movie)
     lt.addLast(catalog['genres'], g)
 
 def endDirectorslist(directores):

@@ -122,7 +122,25 @@ def loadActors(catalog):
             movie_counter += 1
     t1_stop = process_time() #tiempo inicial
     print('Tiempo de ejecución carga actores',t1_stop-t1_start,' segundos')
-    model.endActorslist(catalog)
+    endActorslist_controller(catalog)
+
+def loadGenres (catalog):
+    """
+    Carga el catálogo de géneros del archivo. Por cada género se cargan sus libros
+    
+    """
+    t1_start = process_time() #tiempo inicial
+    movies = catalog["movies"]
+    for movie in movies:
+        genre_name = movie['genres']
+        pos = lt.isPresent(genre_name, catalog['genres'], equal)
+        if pos != 0:
+            model.updateGenre(catalog, movie, pos)
+        else:
+            model.addGenre(catalog, movie)
+    t1_stop = process_time() #tiempo final
+    print("Tiempo de ejecución carga peliculas",t1_stop-t1_start," segundos")
+    endGenreslist_controller(catalog)
 
 def initCatalog ():
     """
@@ -169,9 +187,13 @@ def find_most_times_director(actor):
     if director_mayor != None:
         actor['mas_veces_director'] = {"name": director_mayor, 'count': mayor}
     
-
 def endActorslist_controller(catalog):
     actores = catalog["actores"]
     for actor in actores:
         model.endActorslist(actor)
         find_most_times_director(actor)
+
+def endGenreslist_controller(catalog):
+    genres = catalog["genres"]
+    for genre in genres:
+        model.endGenreslist(genre)
