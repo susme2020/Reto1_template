@@ -138,3 +138,4 @@ dmypy.json
 #Data
 *.csv
 !Data/themoviesdb/SmallMoviesDetailsCleaned.csv
+!Data/themoviesdb/MoviesCastingRaw-small.csv

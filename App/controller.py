@@ -50,10 +50,6 @@ def compareratings (movie1, movie2):
 def equal(nombre_elemento, elemento):
     return (nombre_elemento == elemento['name'])
 
-def more_times_director(times_director, times_director2):
-    return (times_director < times_director2)
-
-
 # Funciones para la carga de datos 
 
 def loadMovies (catalog):
@@ -161,11 +157,21 @@ def getBestMovies (catalog, number):
         lt.addLast (bestmovies, movie)
     return bestmovies
 
+def find_most_times_director(actor):
+    directores = actor["directors"]
+    mayor = 0
+    director_mayor = None
+    for director in directores:
+        veces_director = directores[director]['count']
+        if veces_director > mayor:
+            mayor = veces_director
+            director_mayor = directores[director]['name']
+    if director_mayor != None:
+        actor['mas_veces_director'] = {"name": director_mayor, 'count': mayor}
+    
+
 def endActorslist_controller(catalog):
     actores = catalog["actores"]
     for actor in actores:
         model.endActorslist(actor)
-        sort.sort(actor["directors"], more_times_director)
-
-""" REVISAR RECORRIDO DE DICCIONARIOS"""
-
+        find_most_times_director(actor)

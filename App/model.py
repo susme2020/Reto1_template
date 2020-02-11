@@ -51,16 +51,16 @@ def newActor (movie, row):
     """
     Crea una nueva estructura para almacenar los actores de una pelicula 
     """
-    actor = {'name':'', 'movie_id':'', 'movie_title':'', 'movie_count': '', 'movie_average': '', 'directors': {}}
+    actor = {'name':'', 'movies_id':'', 'movie_titles':'', 'movie_count': '', 'movie_average': '', 'directors': {}}
     actor ['name'] = row['director_name']
-    actor ['movie_id'] = lt.newList('ARRAY_LIST')
-    lt.addLast(actor ['movie_id'], movie['id'])
-    actor ['movie_title'] = lt.newList('ARRAY_LIST')
-    lt.addLast(actor['movie_title'], movie['title'])
+    actor ['movies_id'] = lt.newList('ARRAY_LIST')
+    lt.addLast(actor ['movies_id'], movie['id'])
+    actor ['movie_titles'] = lt.newList('ARRAY_LIST')
+    lt.addLast(actor['movie_titles'], movie['title'])
     actor ['movie_count'] = 1
     actor ['movie_average'] = movie['vote_average']
     director_name = row['director_name']
-    actor['directors'][director_name] = 1
+    actor['directors'][director_name] = {'name': director_name, 'count': 1}
     return actor
 
 def updateActor(catalog, pos_actor, pos_movie, director):
@@ -69,16 +69,16 @@ def updateActor(catalog, pos_actor, pos_movie, director):
     """
     movie = catalog['movies'][pos_movie]
     actor = catalog['actors'][pos_actor]
-    lt.addLast(actor['movie_id'], movie['id'])
-    lt.addLast(actor['movie_title'], movie['title'])
+    lt.addLast(actor['movies_id'], movie['id'])
+    lt.addLast(actor['movie_titles'], movie['title'])
     actor['movie_count'] += 1
     actor['movie_average'] += movie['vote_average']
     directores_por_actor = actor['directors']
     existe = directores_por_actor.get(director)
     if existe != None:
-        directores_por_actor[director] += 1
+        existe['count'] += 1
     else:
-        directores_por_actor[director] = 1
+        directores_por_actor[director] = {'name': director, 'count': 1}
 
 def addActor (catalog, row, pos_movie):
     """
@@ -92,12 +92,12 @@ def newDirector (movie, row):
     """
     Esta estructura almancena los directores de una pelicula.
     """
-    director = {'name':'', 'movie_id':'', 'movie_title':'', 'movie_count': '', 'movie_average': ''}
+    director = {'name':'', 'movies_id':'', 'movie_titles':'', 'movie_count': '', 'movie_average': ''}
     director ['name'] = row['director_name']
-    director ['movie_id'] = lt.newList('ARRAY_LIST')
-    lt.addLast(director ['movie_id'], movie['id'])
-    director ['movie_title'] = lt.newList('ARRAY_LIST')
-    lt.addLast(director['movie_title'], movie['title'])
+    director ['movies_id'] = lt.newList('ARRAY_LIST')
+    lt.addLast(director ['movies_id'], movie['id'])
+    director ['movie_titles'] = lt.newList('ARRAY_LIST')
+    lt.addLast(director['movie_titles'], movie['title'])
     director ['movie_count'] = 1
     director ['movie_average'] = movie['vote_average']
     return director
@@ -108,8 +108,8 @@ def updateDirector(catalog, pos_director, pos_movie):
     """
     movie = catalog['movies'][pos_movie]
     director = catalog['directors'][pos_director]
-    lt.addLast(director['movie_id'], movie['id'])
-    lt.addLast(director['movie_title'], movie['title'])
+    lt.addLast(director['movies_id'], movie['id'])
+    lt.addLast(director['movie_titles'], movie['title'])
     director['movie_count'] += 1
     director['movie_average'] += movie['vote_average']
 
@@ -121,12 +121,48 @@ def addDirector (catalog, row, pos_movie):
     d = newDirector(movie, row)
     lt.addLast(catalog['directors'], d)
 
+def newGenre (movie, row):
+    """
+    Crea una nueva estructura para almacenar los géneros de películas
+    """
+    genre = {'name':'', 'movies_id':'', 'movie_titles':'', 'movie_count': '', 'movie_average': ''}
+    genre ['name'] = row['director_name']
+    genre ['movies_id'] = lt.newList('ARRAY_LIST')
+    lt.addLast(genre ['movies_id'], movie['id'])
+    genre ['movie_titles'] = lt.newList('ARRAY_LIST')
+    lt.addLast(genre['movie_titles'], movie['title'])
+    genre ['movie_count'] = 1
+    genre ['movie_average'] = movie['vote_average']
+    return genre
+
+def updateGenre(catalog, pos_actor, pos_movie, director):
+    """
+    Actualiza la lista de actores
+    """
+    movie = catalog['movies'][pos_movie]
+    genre = catalog['actors'][pos_actor]
+    lt.addLast(genre['movies_id'], movie['id'])
+    lt.addLast(genre['movie_titles'], movie['title'])
+    genre['movie_count'] += 1
+    genre['movie_average'] += movie['vote_average']
+
+def addGenre(catalog, row, pos_movie):
+    """
+    Adiciona un actor a la lista de actores
+    """
+    movie = catalog['movies'][pos_movie]
+    g = newGenre(movie, row)
+    lt.addLast(catalog['genres'], g)
+
 def endDirectorslist(directores):
     for director in directores:
         director ['movie_average'] = director ['movie_average'] / director ['movie_count'] 
 
 def endActorslist(actor):
     actor ['movie_average'] = actor ['movie_average'] / actor ['movie_count']
+
+def endGenreslist(genre):
+    genre ['movie_average'] = genre ['movie_average'] / genre ['movie_count']
 
 # Funciones de consulta
 
@@ -135,4 +171,3 @@ def getMoviesByDirector (catalog, dir_name):
     Retorna las peliculas a partir del nombre del director
     """
     return []
-
