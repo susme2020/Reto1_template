@@ -37,43 +37,96 @@ def newCatalog():
     """
     Inicializa el catálogo de peliculas. Retorna el catalogo inicializado.
     """
-    catalog = {'movies':None, 'directors':None, 'actors': None}
+    catalog = {'movies':None, 'directors':None, 'actors': None, 'movies_by_vote_count': None, 'movies_by_vote_average': None, 'genres': None}
     catalog['movies'] = lt.newList('ARRAY_LIST')
     catalog['directors'] = lt.newList('ARRAY_LIST')
     catalog['actors'] = lt.newList('ARRAY_LIST')
+    catalog['movies_by_vote_count'] = lt.newList('ARRAY_LIST')
+    catalog['movies_by_vote_average'] = lt.newList('ARRAY_LIST')
+    catalog['genres'] = lt.newList('ARRAY_LIST')
     return catalog
 
 
-def newActor (name, movie_id):
+def newActor (movie, row):
     """
     Crea una nueva estructura para almacenar los actores de una pelicula 
     """
-    pass
+    actor = {'name':'', 'movie_id':'', 'movie_title':'', 'movie_count': '', 'movie_average': '', 'directors': {}}
+    actor ['name'] = row['director_name']
+    actor ['movie_id'] = lt.newList('ARRAY_LIST')
+    lt.addLast(actor ['movie_id'], movie['id'])
+    actor ['movie_title'] = lt.newList('ARRAY_LIST')
+    lt.addLast(actor['movie_title'], movie['title'])
+    actor ['movie_count'] = 1
+    actor ['movie_average'] = movie['vote_average']
+    director_name = row['director_name']
+    actor['directors'][director_name] = 1
+    return actor
 
-def addActor (catalog, actor):
+def updateActor(catalog, pos_actor, pos_movie, director):
+    """
+    Actualiza la lista de actores
+    """
+    movie = catalog['movies'][pos_movie]
+    actor = catalog['actors'][pos_actor]
+    lt.addLast(actor['movie_id'], movie['id'])
+    lt.addLast(actor['movie_title'], movie['title'])
+    actor['movie_count'] += 1
+    actor['movie_average'] += movie['vote_average']
+    directores_por_actor = actor['directors']
+    existe = directores_por_actor.get(director)
+    if existe != None:
+        directores_por_actor[director] += 1
+    else:
+        directores_por_actor[director] = 1
+
+def addActor (catalog, row, pos_movie):
     """
     Adiciona un actor a la lista de actores
     """
-    pass
+    movie = catalog['movies'][pos_movie]
+    a = newActor(movie, row)
+    lt.addLast(catalog['actors'], a)
 
-def newDirector (name, movie_id):
+def newDirector (movie, row):
     """
     Esta estructura almancena los directores de una pelicula.
     """
-    director = {'name':'', 'movie_id':''}
-    director ['name'] = name
-    director ['movie_id'] = movie_id
+    director = {'name':'', 'movie_id':'', 'movie_title':'', 'movie_count': '', 'movie_average': ''}
+    director ['name'] = row['director_name']
+    director ['movie_id'] = lt.newList('ARRAY_LIST')
+    lt.addLast(director ['movie_id'], movie['id'])
+    director ['movie_title'] = lt.newList('ARRAY_LIST')
+    lt.addLast(director['movie_title'], movie['title'])
+    director ['movie_count'] = 1
+    director ['movie_average'] = movie['vote_average']
     return director
 
+def updateDirector(catalog, pos_director, pos_movie):
+    """
+    Actualiza la lista de directores
+    """
+    movie = catalog['movies'][pos_movie]
+    director = catalog['directors'][pos_director]
+    lt.addLast(director['movie_id'], movie['id'])
+    lt.addLast(director['movie_title'], movie['title'])
+    director['movie_count'] += 1
+    director['movie_average'] += movie['vote_average']
 
-def addDirector (catalog, director):
+def addDirector (catalog, row, pos_movie):
     """
     Adiciona un director a la lista de directores
     """
-    d = newDirector (director['director_name'], director['id'])
-    lt.addLast (catalog['directors'], d)
+    movie = catalog['movies'][pos_movie]
+    d = newDirector(movie, row)
+    lt.addLast(catalog['directors'], d)
 
+def endDirectorslist(directores):
+    for director in directores:
+        director ['movie_average'] = director ['movie_average'] / director ['movie_count'] 
 
+def endActorslist(actor):
+    actor ['movie_average'] = actor ['movie_average'] / actor ['movie_count']
 
 # Funciones de consulta
 

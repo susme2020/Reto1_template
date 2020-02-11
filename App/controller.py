@@ -20,7 +20,7 @@
  """
 
 import config as cf
-import model 
+import model
 import csv
 from ADT import list as lt
 from DataStructures import listiterator as it
@@ -46,6 +46,12 @@ def printList (lst):
 
 def compareratings (movie1, movie2):
     return ( float(movie1['vote_average']) > float(movie2['vote_average']))
+
+def equal(nombre_elemento, elemento):
+    return (nombre_elemento == elemento['name'])
+
+def more_times_director(times_director, times_director2):
+    return (times_director < times_director2)
 
 
 # Funciones para la carga de datos 
@@ -80,18 +86,47 @@ def loadDirectors(catalog):
     dialect.delimiter=";"
     with open(castingfile, encoding="utf-8") as csvfile:
         spamreader = csv.DictReader(csvfile, dialect=dialect)
-        for row in spamreader: 
-            model.addDirector (catalog, row)
+        movie_counter = 1
+        for row in spamreader:
+            director_name = row["director_name"]
+            pos = lt.isPresent(director_name, catalog["directors"], equal)
+            if pos != 0:
+                model.updateDirector(catalog, pos, movie_counter)
+            else:
+                model.addDirector(catalog, row, movie_counter)
+            movie_counter += 1
     t1_stop = process_time() #tiempo inicial
     print("Tiempo de ejecución carga directores",t1_stop-t1_start," segundos")
+    model.endDirectorslist(catalog["directors"])
 
 
 def loadActors(catalog):
     """
     Carga todos los actores
     """
-    pass
-
+    t1_start = process_time() #tiempo inicial
+    castingfile = cf.data_dir + 'themoviesdb/MoviesCastingRaw-small.csv'
+    
+    dialect = csv.excel()
+    dialect.delimiter=";"
+    with open(castingfile, encoding="utf-8") as csvfile:
+        spamreader = csv.DictReader(csvfile, dialect=dialect)
+        movie_counter = 1
+        casting = ['actor1_name', 'actor2_name', 'actor3_name', 'actor4_name', 'actor5_name']
+        for row in spamreader:
+            for actor in casting:
+                actor_name = row[actor]
+                if not actor_name == 'none':
+                    director_name = row['director_name']
+                    pos = lt.isPresent(actor_name, catalog['actors'], equal)
+                    if pos != 0:
+                        model.updateActor(catalog, pos, movie_counter, director_name)
+                    else:
+                        model.addActor(catalog, row, movie_counter)
+            movie_counter += 1
+    t1_stop = process_time() #tiempo inicial
+    print('Tiempo de ejecución carga actores',t1_stop-t1_start,' segundos')
+    model.endActorslist(catalog)
 
 def initCatalog ():
     """
@@ -125,4 +160,12 @@ def getBestMovies (catalog, number):
         movie = lt.getElement (movies, cont)
         lt.addLast (bestmovies, movie)
     return bestmovies
+
+def endActorslist_controller(catalog):
+    actores = catalog["actores"]
+    for actor in actores:
+        model.endActorslist(actor)
+        sort.sort(actor["directors"], more_times_director)
+
+""" REVISAR RECORRIDO DE DICCIONARIOS"""
 
