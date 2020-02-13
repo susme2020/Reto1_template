@@ -56,8 +56,6 @@ def loadData (catalog):
     """
     controller.loadData(catalog)
 
-
-
 def printBestMovies (movies):
     size = lt.size(movies)
     if size:
@@ -68,8 +66,6 @@ def printBestMovies (movies):
             print ('Titulo: ' + movie['original_title'] + '  Fecha: ' + movie['release_date'] + ' Rating: ' + movie['vote_average'])
     else:
         print ('No se encontraron peliculas')
-
-
 
 """
 Menu principal

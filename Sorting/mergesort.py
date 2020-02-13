@@ -73,5 +73,3 @@ def sort(lst, lessfunction):
             lt.changeInfo(lst, k, lt.getElement(rightlist, j))
             j += 1
             k += 1
-
-
