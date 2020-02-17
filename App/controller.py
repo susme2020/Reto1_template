@@ -173,7 +173,7 @@ def getMoviesByDirector (catalog, dir_name):
     return model.getMoviesByDirector(catalog, dir_name)
 
 def getBestMovies (catalog, number):
-    movies = catalog['movies']
+    movies = catalog['movies_by_vote_average']
     bestmovies = lt.newList()
     for cont in range (1, number+1):
         movie = lt.getElement (movies, cont)
@@ -204,21 +204,12 @@ def endGenreslist_controller(catalog):
         model.endGenreslist(genre)
 
 def sortMovies(catalog):
-    sort_by_count(catalog, less_by_subelement_count)
-    sort_by_average(catalog, less_by_subelement_average)
+    sort_by(catalog, less_by_subelement_count, 'movies_by_vote_count')
+    sort_by(catalog, less_by_subelement_average, 'movies_by_vote_average')
 
-def sort_by_count(catalog, compare_function):
+def sort_by(catalog, compare_function, sub_catalog):
     movies = catalog['movies']
-    lista = catalog['movies_by_vote_count']
-    iterator = it.newIterator(movies)
-    while  it.hasNext(iterator):
-        element = it.next(iterator)
-        lt.addLast(lista,element)
-    sort.sort(lista, compare_function)
-
-def sort_by_average(catalog, compare_function):
-    movies = catalog['movies']
-    lista = catalog['movies_by_vote_average']
+    lista = catalog[sub_catalog]
     iterator = it.newIterator(movies)
     while  it.hasNext(iterator):
         element = it.next(iterator)

@@ -37,9 +37,26 @@ operación solicitada
 def printMenu():
     print("Bienvenido al Reto 1")
     print("1- Cargar información del reto")
-    print("2- Peliculas con mejores votaciones")
-    print("3- Peliculas por Director")
-    print("4- Requerimiento 2 ... etc")
+
+    print("--- Requerimiento 1, Buenas películas ---")
+    print("2- Películas con buena votacion (≥6) por Director")
+
+    print("--- Requerimiento 2, Votos ---")
+    print("3- Películas con mejores votaciones (mejor promedio de votos)")
+    print("4- Las x películas con peores votaciones (peor promedio de votos)")
+    print("5- Películas con mayor número de votos")
+    print("6- Las x películas con menor número de votos")
+
+    print("--- Requerimiento 3, Directores ---")
+    print("7- Películas por Director") # debe incluir número de películas y voto promedio
+
+    print("--- Requerimiento 4, Actores ---")
+    print("8- Películas por Actor") # debe incluir total de películas, promedio de votos y director que más veces lo ha elegido
+
+    print("--- Requerimiento 5, Géneros ---")
+    print("9- Películas por Género") # debe incluir el promedio de votos y cuántas películas tiene asociadas
+
+    print("10- Top x de Películas (por vote_average)")
     print("0- Salir")
 
 
@@ -73,28 +90,75 @@ Menu principal
 while True:
     printMenu()
     inputs =input('Seleccione una opción para continuar\n')
-    if int(inputs[0])==1:
+    datos_cargados = False
+
+    if int(inputs[0])==1: # 1- Cargar información del reto
         print("Cargando información de los archivos ....")
         catalog = initCatalog ()
         loadData (catalog)
-        print ('Peliculas cargadas: ' + str(lt.size(catalog['movies_by_vote_average'])))
+        print ('Peliculas cargadas: ' + str(lt.size(catalog['movies'])))
         print ('Directores cargados: ' + str(lt.size(catalog['directors'])))
+        print ('Géneros cargados: ' + str(lt.size(catalog['genres'])))
+        datos_cargados = True
 
+    elif int(inputs[0])==2: # 2- Películas con buena votacion (≥6) por Director
+        if not datos_cargados:
+            print("Debe cargar los datos primero")
+        else:
+            a = 1
 
-    elif int(inputs[0])==2:
-        number = input ("Buscando las TOP ?: ")
-        movies = controller.getBestMovies (catalog, int(number))
-        printBestMovies (movies)
+    elif int(inputs[0])==3: # 3- Películas con mejores votaciones (mejor promedio de votos)
+        if not datos_cargados:
+            print("Debe cargar los datos primero")
+        else:
+            a = 1
 
-    elif int(inputs[0])==3:
-        dir_name = input("Nombre del director a buscar: ")
-        movies = controller.getMoviesByDirector (catalog, dir_name)
-        print(movies)
+    elif int(inputs[0])==4: # 4- Las x películas con peores votaciones (peor promedio de votos)
+        if not datos_cargados:
+            print("Debe cargar los datos primero")
+        else:
+            label = input ("Nombre del Actor a buscar: ")
 
+    elif int(inputs[0])==5: # 5- Películas con mayor número de votos
+        if not datos_cargados:
+            print("Debe cargar los datos primero")
+        else:
+            a = 1
 
-    elif int(inputs[0])==4:
-        label = input ("Nombre del Actor a buscar: ")
-        pass
+    elif int(inputs[0])==6: # 6- Las x películas con menor número de votos
+        if not datos_cargados:
+            print("Debe cargar los datos primero")
+        else:
+            a = 1
+
+    elif int(inputs[0])==7: # 7- Películas por Director
+        if not datos_cargados:
+            print("Debe cargar los datos primero")
+        else:
+            dir_name = input("Nombre del director a buscar: ")
+            movies = controller.getMoviesByDirector (catalog, dir_name)
+            print(movies)
+    
+    elif int(inputs[0])==8: # 8- Películas por Actor
+        if not datos_cargados:
+            print("Debe cargar los datos primero")
+        else:
+            a = 1
+
+    elif int(inputs[0])==9: # 9- Películas por Género
+        if not datos_cargados:
+            print("Debe cargar los datos primero")
+        else:
+            a = 1
+
+    elif int(inputs[0])==10: # 10- Top x de Películas
+        if not datos_cargados:
+                print("Debe cargar los datos primero")
+        else:
+            number = input ("Buscando las TOP ?: ")
+            movies = controller.getBestMovies (catalog, int(number))
+            printBestMovies (movies)
+
     else:
         sys.exit(0)
 sys.exit(0)

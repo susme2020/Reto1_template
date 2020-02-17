@@ -168,4 +168,10 @@ def getMoviesByDirector (catalog, dir_name):
     """
     Retorna las peliculas a partir del nombre del director
     """
-    return []
+    directors = catalog["directors"]
+    for director in directors:
+        if dir_name in director:
+            director_encontrado = director
+            break
+    movies_by_director = directors[director_encontrado]["movie_titles"]
+    return movies_by_director
