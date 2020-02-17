@@ -169,16 +169,47 @@ def loadData (catalog):
 
 # Funciones llamadas desde la vista y enviadas al modelo
 
-def getMoviesByDirector (catalog, dir_name):
+def getMoviesByDirector(catalog, dir_name):
     return model.getMoviesByDirector(catalog, dir_name)
 
-def getBestMovies (catalog, number):
+def getMoviesByActor(catalog, act_name):
+    return model.getMoviesByActor(catalog, act_name)
+
+def getBestMovies(catalog, number):
     movies = catalog['movies_by_vote_average']
     bestmovies = lt.newList()
     for cont in range (1, number+1):
         movie = lt.getElement (movies, cont)
         lt.addLast (bestmovies, movie)
     return bestmovies
+
+def getMostVotedMovies(catalog, number):
+    movies = catalog['movies_by_vote_count']
+    mostvotedmovies = lt.newList()
+    for cont in range (1, number+1):
+        movie = lt.getElement (movies, cont)
+        lt.addLast (mostvotedmovies, movie)
+    return mostvotedmovies
+
+def getLeastVotedMovies(catalog, number):
+    movies = catalog['movies_by_vote_count']
+    leastvotedmovies = lt.newList()
+    for cont in range (1, number+1):
+        movie = lt.getElement (movies, cont)
+        lt.addLast (leastvotedmovies, movie)
+    return leastvotedmovies
+
+def getWorstMovies(catalog, number):
+    movies = catalog['movies_by_vote_average']
+    size = lt.size(movies)
+    worstmovies = lt.newList()
+    for cont in range(size+1, size+1-number, -1):
+        movie = lt.getElement (movies, cont)
+        lt.addLast (worstmovies, movie)
+    return worstmovies
+
+def getBestMoviesByDirector(catalog, director_movies):
+    return model.getBestMoviesByDirector(catalog, director_movies)
 
 def find_most_times_director(actor):
     directores = actor['directors']

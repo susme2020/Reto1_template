@@ -92,7 +92,7 @@ def newDirector (movie, row):
     """
     Esta estructura almancena los directores de una pelicula.
     """
-    director = {'name':'', 'movies_id':'', 'movie_titles':'', 'movie_count': '', 'movie_average': ''}
+    director = {'name':'', 'movies_id':'', 'movie_titles':'', 'movie_count': '', 'movie_average': '', "movies_averages": ""}
     director ['name'] = row['director_name']
     director ['movies_id'] = lt.newList('ARRAY_LIST')
     lt.addLast(director ['movies_id'], movie['id'])
@@ -100,6 +100,8 @@ def newDirector (movie, row):
     lt.addLast(director['movie_titles'], movie['title'])
     director ['movie_count'] = 1
     director ['movie_average'] = movie['vote_average']
+    director ['movies_averages'] = lt.newList('ARRAY_LIST')
+    lt.addLast(director['movies_averages'], movie['vote_average']) # movies_averages es una lista de los promedios de cada película
     return director
 
 def updateDirector(catalog, pos_director, pos_movie):
@@ -112,6 +114,7 @@ def updateDirector(catalog, pos_director, pos_movie):
     lt.addLast(director['movie_titles'], movie['title'])
     director['movie_count'] += 1
     director['movie_average'] += movie['vote_average']
+    lt.addLast(director['movies_averages'], movie['vote_average'])
 
 def addDirector (catalog, row, pos_movie):
     """
@@ -169,9 +172,45 @@ def getMoviesByDirector (catalog, dir_name):
     Retorna las peliculas a partir del nombre del director
     """
     directors = catalog["directors"]
+    pos_director = 1
     for director in directors:
         if dir_name in director:
-            director_encontrado = director
-            break
-    movies_by_director = directors[director_encontrado]["movie_titles"]
-    return movies_by_director
+            response = int(input("El director que esta buscando es ", director, "?\n Responda [1] para SÍ o [0] para NO"))
+            if response == 1:
+                director_encontrado = director
+                movies_by_director = directors[pos_director]["movies_titles"]
+                break
+            else:
+                director_encontrado = None
+                movies_by_director = None
+        pos_director += 1
+    return (director_encontrado, movies_by_director)
+
+def getMoviesByActor (catalog, act_name):
+    """
+    Retorna las peliculas a partir del nombre del actor
+    """
+    actors = catalog["actors"]
+    pos_actor = 1
+    for actor in actors:
+        if act_name in actor:
+            response = int(input("El actor que esta buscando es ", actor, "?\n Responda [1] para SÍ o [0] para NO"))
+            if response == 1:
+                actor_encontrado = actor
+                movies_by_actor = actors[pos_actor]["movies_titles"]
+                break
+            else:
+                actor_encontrado = None
+                movies_by_actor = None
+        pos_actor += 1
+    return (actor_encontrado, movies_by_actor)
+
+def getBestMoviesByDirector(catalog, director_movies):
+    director = director_movies[0]
+    director_movies_averages = director["movies_averages"]
+    bestmovies = lt.newList()
+    pos_movie = 1
+    for movie_average in director_movies_averages:
+       if movie_average >= 6:
+           lt.addLast(bestmovies, director["movie_titles"][pos_movie])
+    return bestmovies

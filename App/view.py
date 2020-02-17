@@ -76,21 +76,55 @@ def loadData (catalog):
 def printBestMovies (movies):
     size = lt.size(movies)
     if size:
-        print (' Estas son las mejores peliculas: ')
+        print (' Estas son las mejores películas: ')
         iterator = it.newIterator(movies)
         while  it.hasNext(iterator):
             movie = it.next(iterator)
-            print ('Titulo: ' + movie['original_title'] + '  Fecha: ' + movie['release_date'] + ' Rating: ' + movie['vote_average'])
+            print ('Título: ' + movie['original_title'] + '  Fecha: ' + movie['release_date'] + ' Rating: ' + movie['vote_average'])
     else:
         print ('No se encontraron peliculas')
+
+def printMostVotedMovies (movies):
+    size = lt.size(movies)
+    if size:
+        print (' Estas son las películas más votadas: ')
+        iterator = it.newIterator(movies)
+        while  it.hasNext(iterator):
+            movie = it.next(iterator)
+            print ('Título: ' + movie['original_title'] + '  Fecha: ' + movie['release_date'] + ' Rating: ' + movie['vote_average'])
+    else:
+        print ('No se encontraron peliculas')
+
+def printLeastVotedMovies (movies):
+    size = lt.size(movies)
+    if size:
+        print (' Estas son las películas menos votadas: ')
+        iterator = it.newIterator(movies)
+        while  it.hasNext(iterator):
+            movie = it.next(iterator)
+            print ('Título: ' + movie['original_title'] + '  Fecha: ' + movie['release_date'] + ' Rating: ' + movie['vote_average'])
+    else:
+        print ('No se encontraron peliculas')
+
+def printWorstMovies (movies):
+    size = lt.size(movies)
+    if size:
+        print (' Estas son las peores películas: ')
+        iterator = it.newIterator(movies)
+        while  it.hasNext(iterator):
+            movie = it.next(iterator)
+            print ('Título: ' + movie['original_title'] + '  Fecha: ' + movie['release_date'] + ' Rating: ' + movie['vote_average'])
+    else:
+        print ('No se encontraron peliculas')
+        
 
 """
 Menu principal
 """
+datos_cargados = False
 while True:
     printMenu()
     inputs =input('Seleccione una opción para continuar\n')
-    datos_cargados = False
 
     if int(inputs[0])==1: # 1- Cargar información del reto
         print("Cargando información de los archivos ....")
@@ -98,6 +132,7 @@ while True:
         loadData (catalog)
         print ('Peliculas cargadas: ' + str(lt.size(catalog['movies'])))
         print ('Directores cargados: ' + str(lt.size(catalog['directors'])))
+        print ('Actores cargados: ' + str(lt.size(catalog['actors'])))
         print ('Géneros cargados: ' + str(lt.size(catalog['genres'])))
         datos_cargados = True
 
@@ -105,45 +140,73 @@ while True:
         if not datos_cargados:
             print("Debe cargar los datos primero")
         else:
-            a = 1
+            dir_name = input("Nombre del director a buscar: ")
+            movies = controller.getMoviesByDirector (catalog, dir_name)[1] # getMoviesByDirector retorna una tupla, el primer dato es el nombre del director y el segundo es su lista de títulos de películas
+            if movies[0] == None:
+                print("No se pudo encontrar el director que busca :(")
+            else:
+                tupla = controller.getMoviesByDirector (catalog, dir_name)
+                movies = tupla[1]
+                director = tupla[0]
+                print(director, "dirigió ", lt.size(movies), " películas con promedio mayor o igual a 6\nTales peículas son las siguientes:\n")
+                for movie in movies:
+                    print(movie)
 
     elif int(inputs[0])==3: # 3- Películas con mejores votaciones (mejor promedio de votos)
         if not datos_cargados:
             print("Debe cargar los datos primero")
         else:
-            a = 1
+            number = input ("Buscando las TOP ?: ")
+            movies = controller.getBestMovies (catalog, int(number))
+            printBestMovies (movies)
 
     elif int(inputs[0])==4: # 4- Las x películas con peores votaciones (peor promedio de votos)
         if not datos_cargados:
             print("Debe cargar los datos primero")
         else:
-            label = input ("Nombre del Actor a buscar: ")
+            number = input ("Buscando las TOP ?: ")
+            movies = controller.getWorstMovies (catalog, int(number))
+            printWorstMovies (movies)
 
     elif int(inputs[0])==5: # 5- Películas con mayor número de votos
         if not datos_cargados:
             print("Debe cargar los datos primero")
         else:
-            a = 1
+            number = input ("Buscando las TOP ?: ")
+            movies = controller.getMostVotedMovies (catalog, int(number))
+            printMostVotedMovies(movies)
 
     elif int(inputs[0])==6: # 6- Las x películas con menor número de votos
         if not datos_cargados:
             print("Debe cargar los datos primero")
         else:
-            a = 1
+            number = input ("Buscando las TOP ?: ")
+            movies = controller.getLeastVotedMovies (catalog, int(number))
+            printLeastVotedMovies(movies)
 
     elif int(inputs[0])==7: # 7- Películas por Director
         if not datos_cargados:
             print("Debe cargar los datos primero")
         else:
             dir_name = input("Nombre del director a buscar: ")
-            movies = controller.getMoviesByDirector (catalog, dir_name)
-            print(movies)
+            tupla = controller.getMoviesByDirector (catalog, dir_name)
+            movies = tupla[1]
+            director = tupla[0]
+            print(director, " dirigió ", lt.size(movies), " películas con los siguientes títulos: \n")
+            for movie in movies:
+                print(movie)
     
     elif int(inputs[0])==8: # 8- Películas por Actor
         if not datos_cargados:
             print("Debe cargar los datos primero")
         else:
-            a = 1
+            act_name = input("Nombre del actor a buscar: ")
+            tupla = controller.getMoviesByActor (catalog, act_name)
+            movies = tupla[1]
+            actor = tupla[0]
+            print(actor, " actuó en ", lt.size(movies), " películas con los siguientes títulos: \n")
+            for movie in movies:
+                print(movie)
 
     elif int(inputs[0])==9: # 9- Películas por Género
         if not datos_cargados:
