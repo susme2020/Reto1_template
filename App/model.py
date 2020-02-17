@@ -178,7 +178,7 @@ def getMoviesByDirector (catalog, dir_name):
             response = int(input("El director que esta buscando es ", director, "?\n Responda [1] para SÍ o [0] para NO"))
             if response == 1:
                 director_encontrado = director
-                movies_by_director = directors[pos_director]["movies_titles"]
+                movies_by_director = directors[pos_director]["movie_titles"]
                 break
             else:
                 director_encontrado = None
@@ -197,13 +197,32 @@ def getMoviesByActor (catalog, act_name):
             response = int(input("El actor que esta buscando es ", actor, "?\n Responda [1] para SÍ o [0] para NO"))
             if response == 1:
                 actor_encontrado = actor
-                movies_by_actor = actors[pos_actor]["movies_titles"]
+                movies_by_actor = actors[pos_actor]["movie_titles"]
                 break
             else:
                 actor_encontrado = None
                 movies_by_actor = None
         pos_actor += 1
     return (actor_encontrado, movies_by_actor)
+
+def getMoviesByGenre (catalog, gen_name):
+    """
+    Retorna las peliculas a partir del nombre del género
+    """
+    genres = catalog["genres"]
+    pos_genre = 1
+    for genre in genres:
+        if gen_name in genre:
+            response = int(input("El género que esta buscando es ", genre, "?\n Responda [1] para SÍ o [0] para NO"))
+            if response == 1:
+                genero_encontrado = genre
+                movies_by_genero = genres[pos_genre]["movie_titles"]
+                break
+            else:
+                genero_encontrado = None
+                movies_by_genero = None
+        pos_genre += 1
+    return (genero_encontrado, movies_by_genero)
 
 def getBestMoviesByDirector(catalog, director_movies):
     director = director_movies[0]

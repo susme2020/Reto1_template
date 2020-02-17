@@ -212,7 +212,13 @@ while True:
         if not datos_cargados:
             print("Debe cargar los datos primero")
         else:
-            a = 1
+            gen_name = input("Nombre del género a buscar: ")
+            tupla = controller.getMoviesByGenre (catalog, gen_name)
+            movies = tupla[1]
+            genre = tupla[0]
+            print("Hay ", lt.size(movies), " películas del género de ", genre, "\nTítulos: \n")
+            for movie in movies:
+                print(movie)
 
     elif int(inputs[0])==10: # 10- Top x de Películas
         if not datos_cargados:

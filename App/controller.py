@@ -175,6 +175,9 @@ def getMoviesByDirector(catalog, dir_name):
 def getMoviesByActor(catalog, act_name):
     return model.getMoviesByActor(catalog, act_name)
 
+def getMoviesByGenre(catalog, gen_name):
+    return model.getMoviesByGenre(catalog, gen_name)
+
 def getBestMovies(catalog, number):
     movies = catalog['movies_by_vote_average']
     bestmovies = lt.newList()
